@@ -1,0 +1,2 @@
+anotações PostgreSQL
+serial - autoincremento
