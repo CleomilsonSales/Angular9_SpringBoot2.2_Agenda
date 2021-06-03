@@ -12,6 +12,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/contatos")
 @RequiredArgsConstructor
+@CrossOrigin("*") //aceitando qualquer dominio, so para testar
 public class ContatoController {
 
     private final ContatoRepository repository;
