@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ContatoService } from '../contato.service';
 import { Contato } from './contato';
+//formularios reativos do angular
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-contato',
@@ -9,11 +11,15 @@ import { Contato } from './contato';
 })
 export class ContatoComponent implements OnInit {
 
+  formulario!: FormGroup;
+
   constructor(
-    private service: ContatoService
+    private service: ContatoService,
+    private fb: FormBuilder
   ) { }
 
   ngOnInit(): void {
+    /*
     //apenas teste de comunição com a api
     const c: Contato = new Contato();
     c.nome = "Saori"
@@ -24,7 +30,17 @@ export class ContatoComponent implements OnInit {
           .save(c)
           .subscribe(response => {
             console.log(response);
-          });
+          });*/
+
+    this.formulario = this.fb.group({
+      nome: ['', Validators.required],
+      email: ['', Validators.email]
+    })
   }
 
+  submit(){
+    //testando o formulario
+    console.log(this.formulario.value)
+  }
+  
 }
