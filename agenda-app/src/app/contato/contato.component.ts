@@ -12,6 +12,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class ContatoComponent implements OnInit {
 
   formulario!: FormGroup;
+  contatos: Contato[] = [];
+  colunas = ['id','nome','email','favorito']
 
   constructor(
     private service: ContatoService,
@@ -31,16 +33,53 @@ export class ContatoComponent implements OnInit {
           .subscribe(response => {
             console.log(response);
           });*/
+          
+    this.monstarFormulario();
+    this.listarContatos();
+  }
 
+  monstarFormulario(){
     this.formulario = this.fb.group({
       nome: ['', Validators.required],
-      email: ['', Validators.email]
+      email: ['', [Validators.email, Validators.required]]
     })
   }
 
+  listarContatos(){
+    this.service
+            .list()
+            .subscribe(response => {
+              this.contatos = response;
+            })
+  }
+
   submit(){
+    /*
     //testando o formulario
     console.log(this.formulario.value)
+    //vendo se o formulario esta tudo ok
+    const isValid = this.formulario.valid
+    console.log('isValid: ', isValid)
+    
+    //pegando campos com erros
+    const erroNome = this.formulario.controls.nome.errors?.required
+    const erroEmail = this.formulario.controls.email.errors?.email
+    console.log('erroNome:',erroNome)
+    console.log('erroNome:',erroEmail)
+    */
+
+    //persistindo
+    const formValues = this.formulario.value
+    const contato: Contato = new Contato(formValues.nome, formValues.email)
+
+    this.service
+          .save(contato)
+          .subscribe(response =>{
+            this.contatos.push(response); //push adicionando ao array
+            console.log(this.contatos);
+          })
+
+
   }
   
 }
