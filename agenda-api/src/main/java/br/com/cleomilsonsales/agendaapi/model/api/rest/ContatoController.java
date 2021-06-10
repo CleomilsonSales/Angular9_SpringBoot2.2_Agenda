@@ -3,9 +3,13 @@ package br.com.cleomilsonsales.agendaapi.model.api.rest;
 import br.com.cleomilsonsales.agendaapi.model.entity.Contato;
 import br.com.cleomilsonsales.agendaapi.model.repository.ContatoRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Part;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,13 +39,33 @@ public class ContatoController {
     }
 
     @PatchMapping("{id}/favorito") //atualiazação parcial
-    public void favorito(@PathVariable Integer id, @RequestBody Boolean favorito){
+    public void favorito(@PathVariable Integer id){
         //Relembrando: Optional pq pode ou não ter um contato
         Optional<Contato> contato = repository.findById(id);
 
         contato.ifPresent(c ->{
-            c.setFavorito(favorito);
+            boolean favorito = c.getFavorito() == Boolean.TRUE; //trantando o valor sendo null
+            c.setFavorito(!favorito);
             repository.save(c);
         });
+    }
+
+    //salvando a foto diretamente no banco
+    public byte[] addPhoto(@PathVariable Integer id,
+                           @RequestParam("foto") Part arquivo){
+        Optional<Contato> contato = repository.findById(id);
+        return contato.map(c -> {
+            try{
+                InputStream is = arquivo.getInputStream();
+                byte[] bytes =  new byte[(int) arquivo.getSize()];
+                IOUtils.readFully(is,bytes);
+                c.setFoto(bytes);
+                repository.save(c);
+                is.close();
+                return bytes;
+            }catch (IOException e){
+                return null;
+            }
+        }).orElse(null); //para o map
     }
 }

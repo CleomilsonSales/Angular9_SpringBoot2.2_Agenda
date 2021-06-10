@@ -45,6 +45,14 @@ export class ContatoComponent implements OnInit {
     })
   }
 
+  favoritar(contato: Contato){
+    this.service
+          .favoritar(contato)
+          .subscribe(response => {
+            contato.favorito = !contato.favorito;
+          })
+  }
+
   listarContatos(){
     this.service
             .list()
@@ -75,7 +83,9 @@ export class ContatoComponent implements OnInit {
     this.service
           .save(contato)
           .subscribe(response =>{
-            this.contatos.push(response); //push adicionando ao array
+            let lista: Contato[] = [... this.contatos, response] //server pra adicionar o this.contato no array
+            this.contatos = lista; //assim eu crio outra instancia para a lista ser atualizada em tempo de execução
+            //this.contatos.push(response); //push adicionando ao array
             console.log(this.contatos);
           })
 

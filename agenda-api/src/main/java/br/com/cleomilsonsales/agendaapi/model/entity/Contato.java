@@ -24,4 +24,9 @@ public class Contato {
     @Column
     private Boolean favorito;
 
+    //salvando a foto diretamente no banco de dados
+    @Column
+    @Lob //para usar o array de bytes
+    private byte[] foto;
+
 }
