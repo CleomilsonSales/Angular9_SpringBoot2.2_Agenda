@@ -78,7 +78,8 @@
         <mat-card class="half-width">
             <mat-card-title>Novo Contato</mat-card-title>
             <form [formGroup]="formulario" (ngSubmit)="submit()">
-                <div *ngIf="this.formulario.controls.nome.errors">
+                <!-- saber se o campo foi validado ou não-->
+                <div *ngIf="this.formulario.controls.nome.errors && !this.formulario.controls.nome.pristine">
                     <div *ngIf="this.formulario.controls.nome.errors?.required">
                         Campo nome é obrigatório
                     </div>
@@ -88,7 +89,7 @@
                     <input formControlName="nome" matInput placeholder="Digite seu nome">
                 </mat-form-field>
                 <br />
-                <div *ngIf="this.formulario.controls.email.errors">
+                <div *ngIf="this.formulario.controls.email.errors && !this.formulario.controls.email.pristine">
                     <div *ngIf="this.formulario.controls.email.errors?.required">
                         Campo e-amil é obrigatório
                     </div>

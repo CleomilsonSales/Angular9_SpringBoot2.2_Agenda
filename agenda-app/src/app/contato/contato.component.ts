@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ContatoDetalheComponent } from '../contato-detalhe/contato-detalhe.component';
 import { PageEvent } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-contato',
@@ -21,14 +22,15 @@ export class ContatoComponent implements OnInit {
   //paginação
   totalElementos = 0;
   pagina = 0;
-  tamanho = 2;
-  pageSizeOptions: number[] = [10];
+  tamanho = 5;
+  pageSizeOptions: number[] = [5];
 
 
   constructor(
     private service: ContatoService,
     private fb: FormBuilder,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private snackbar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
@@ -112,10 +114,17 @@ export class ContatoComponent implements OnInit {
     this.service
           .save(contato)
           .subscribe(response =>{
+            /* sem paginação
             let lista: Contato[] = [... this.contatos, response] //server pra adicionar o this.contato no array
             this.contatos = lista; //assim eu crio outra instancia para a lista ser atualizada em tempo de execução
             //this.contatos.push(response); //push adicionando ao array
-            console.log(this.contatos);
+            */
+            //com paginação
+            this.listarContatos(this.pagina, this.tamanho);
+            this.snackbar.open('O contato foi adicionado', 'Sucesso',{
+              duration: 2000 //2seg
+            })
+            this.formulario.reset();
           })
 
 
