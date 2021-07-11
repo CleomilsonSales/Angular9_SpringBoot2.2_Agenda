@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false, 
-  apiBaseUrl: 'http://localhost:8080/api/contatos'
+  //apiBaseUrl: 'http://localhost:8080/api/contatos'
+  apiBaseUrl: 'http://10.0.0.106:8080/api/contatos'
 };
 
 /*
